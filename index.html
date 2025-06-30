@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday Jen Jen!</title>
+
+  <!-- Pretty pookie-core font -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #ffe6f0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Dancing Script', cursive;
+      overflow: hidden;
+    }
+
+    .envelope {
+      position: relative;
+      width: 280px;
+      height: 200px;
+      background: #ffd1dc;
+      border: 3px solid #ff99aa;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      perspective: 800px; /* perspective for realistic 3D rotation */
+    }
+
+    .flap {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffb6c1;
+      clip-path: polygon(0 0, 100% 0, 50% 50%);
+      transform-origin: top center;
+      transition: transform 1s ease-in-out;
+      z-index: 2;
+      border-bottom: 3px solid #ff99aa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      backface-visibility: hidden;
+    }
+
+    /* Heart seal */
+    .flap::after {
+      content: "💖";
+      font-size: 24px;
+      position: absolute;
+      top: 20px;
+    }
+
+    .message {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff0f5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      font-size: 20px;
+      color: #ff1493;
+      opacity: 0;
+      transition: opacity 1s ease 1s;
+      z-index: 1;
+      backface-visibility: hidden;
+    }
+
+    .message img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+      border: 2px solid #ff69b4;
+    }
+
+    .opened .flap {
+      transform: rotateX(-180deg); /* realistic backward flip */
+    }
+
+    .opened .message {
+      opacity: 1;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 12px 25px;
+      font-size: 18px;
+      background-color: #ff99aa;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+      transition: background 0.3s ease, transform 0.1s ease;
+      font-family: 'Dancing Script', cursive;
+    }
+
+    button:hover {
+      background-color: #ff6f91;
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    canvas {
+      position: fixed;
+      pointer-events: none;
+      top: 0;
+      left: 0;
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="envelope" id="envelope">
+    <div class="flap"></div>
+    <div class="message">
+      <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" alt="Animated Cat Avatar">
+      🎉 Happy Birthday Jen Jen!<br>Love you so much 💖
+    </div>
+  </div>
+
+  <button onclick="openEnvelope()">Open your surprise 💌</button>
+
+  <!-- BGM (replace src with your Lana mp3 link) -->
+  <audio id="bgm" src="https://www.bensound.com/bensound-music/bensound-dreams.mp3"></audio>
+
+  <canvas id="confetti"></canvas>
+
+  <script>
+    function openEnvelope() {
+      document.getElementById('envelope').classList.add('opened');
+      document.getElementById('bgm').play();
+      startConfetti();
+    }
+
+    // Confetti Code
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let confetti = [];
+
+    function Confetto() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height - canvas.height;
+      this.radius = Math.random() * 6 + 4;
+      this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+      this.speed = Math.random() * 3 + 2;
+    }
+
+    function startConfetti() {
+      confetti = Array.from({ length: 150 }, () => new Confetto());
+      animateConfetti();
+    }
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confetti.forEach(c => {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.radius, 0, Math.PI * 2);
+        ctx.fillStyle = c.color;
+        ctx.fill();
+        c.y += c.speed;
+        if (c.y > canvas.height) c.y = 0;
+      });
+      requestAnimationFrame(animateConfetti);
+    }
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+
+</body>
+</html>
